@@ -254,7 +254,7 @@ Projektdetails:
                     <Phone className="h-5 w-5 text-clean-green mr-3" />
                     <div>
                       <p className="font-medium text-clean-text">Telefon</p>
-                      <p className="text-clean-text-muted">+49 3177 2326771</p>
+                      <p className="text-clean-text-muted">+49 171 2326771</p>
                     </div>
                   </div>
                 </div>
@@ -271,7 +271,7 @@ Projektdetails:
                   variant="whatsapp" 
                   size="lg" 
                   className="w-full"
-                  onClick={() => window.open('https://wa.me/4931772326771?text=Hey!%20Ich%20h%C3%A4tte%20Interesse%20an%20ihrem%20Service!', '_blank')}
+                  onClick={() => window.open('https://wa.me/491712326771?text=Hey!%20Ich%20h%C3%A4tte%20Interesse%20an%20ihrem%20Service!', '_blank')}
                 >
                   WhatsApp öffnen
                 </Button>
