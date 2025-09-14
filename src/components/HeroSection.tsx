@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 import cleanlyLogo from "@/assets/cleanly-logo.png";
 import { useState, useEffect } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Star SVG Component
 const StarIcon = ({ className }: { className?: string }) => (
@@ -19,15 +20,19 @@ const StarIcon = ({ className }: { className?: string }) => (
 const HeroSection = () => {
   const [showContent, setShowContent] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
-    // Start video animation
-    const timer = setTimeout(() => {
+    // On mobile, show content immediately. On desktop, wait for video animation
+    if (isMobile) {
       setShowContent(true);
-    }, 3000); // 3 seconds for video animation
-
-    return () => clearTimeout(timer);
-  }, []);
+    } else {
+      const timer = setTimeout(() => {
+        setShowContent(true);
+      }, 3000); // 3 seconds for video animation
+      return () => clearTimeout(timer);
+    }
+  }, [isMobile]);
 
   const handleVideoEnd = () => {
     setVideoEnded(true);
@@ -41,29 +46,48 @@ const HeroSection = () => {
 
   const scrollToContact = () => {
     const contactSection = document.getElementById('contact');
-    contactSection?.scrollIntoView({ behavior: 'smooth' });
+    if (contactSection) {
+      contactSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  };
+
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
   };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center gradient-hero overflow-hidden">
-      {/* Video background animation */}
-      <div className={`absolute inset-0 video-container transition-opacity duration-1000 ${showContent ? 'opacity-0' : 'opacity-100'}`}>
-        <video
-          autoPlay
-          muted
-          onEnded={handleVideoEnd}
-          onError={handleVideoError}
-          className="w-full h-full object-cover"
-          style={{ 
-            filter: 'brightness(1.2) contrast(1.2) hue-rotate(30deg) saturate(0.6)'
-          }}
-        >
-          <source src="/bubbles.mp4" type="video/mp4" />
-        </video>
-      </div>
+      {/* Video background animation - only on desktop */}
+      {!isMobile && (
+        <div className={`absolute inset-0 video-container transition-opacity duration-1000 ${showContent ? 'opacity-0' : 'opacity-100'}`}>
+          <video
+            autoPlay
+            muted
+            onEnded={handleVideoEnd}
+            onError={handleVideoError}
+            className="w-full h-full object-cover"
+            style={{ 
+              filter: 'brightness(1.2) contrast(1.2) hue-rotate(30deg) saturate(0.6)'
+            }}
+          >
+            <source src="/bubbles.mp4" type="video/mp4" />
+          </video>
+        </div>
+      )}
 
-      {/* Foam bubbles animation - only during video */}
-      {!showContent && (
+      {/* Foam bubbles animation - only during video and on desktop */}
+      {!showContent && !isMobile && (
         <div className="absolute inset-0 foam-container">
           {[...Array(30)].map((_, i) => (
             <div
@@ -79,9 +103,9 @@ const HeroSection = () => {
         </div>
       )}
       
-      {/* Background sparkles - enhanced after cleaning */}
+      {/* Background sparkles - enhanced after cleaning, reduced on mobile */}
       <div className="absolute inset-0 sparkles-container">
-        {[...Array(8)].map((_, i) => (
+        {[...Array(isMobile ? 4 : 8)].map((_, i) => (
           <div
             key={i}
             className={`absolute sparkle ${showContent ? 'sparkle-enhanced' : ''}`}
@@ -97,18 +121,20 @@ const HeroSection = () => {
         ))}
       </div>
 
-      {/* Fixed stars above the heading */}
-      <div className="absolute fixed-stars-container">
-        <div className="fixed-star star-1">
-          <StarIcon className="sparkle-icon" />
+      {/* Fixed stars above the heading - only on desktop */}
+      {!isMobile && (
+        <div className="absolute fixed-stars-container">
+          <div className="fixed-star star-1">
+            <StarIcon className="sparkle-icon" />
+          </div>
+          <div className="fixed-star star-2">
+            <StarIcon className="sparkle-icon" />
+          </div>
+          <div className="fixed-star star-3">
+            <StarIcon className="sparkle-icon" />
+          </div>
         </div>
-        <div className="fixed-star star-2">
-          <StarIcon className="sparkle-icon" />
-        </div>
-        <div className="fixed-star star-3">
-          <StarIcon className="sparkle-icon" />
-        </div>
-      </div>
+      )}
 
       <div className={`container mx-auto px-4 text-center relative z-10 transition-all duration-1500 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <div className="max-w-4xl mx-auto">
@@ -142,13 +168,14 @@ const HeroSection = () => {
               onClick={scrollToContact}
               className="w-full sm:w-auto"
             >
-              Jetzt kostenlos anfragen
+              Lass uns drüber sprechen
               <ArrowDown className="ml-2 h-5 w-5" />
             </Button>
             
             <Button 
               variant="cleanlyOutline" 
               size="xl"
+              onClick={scrollToAbout}
               className="w-full sm:w-auto"
             >
               Mehr erfahren
