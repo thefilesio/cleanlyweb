@@ -3,7 +3,7 @@ import { Heart, Award, Users } from "lucide-react";
 const AboutSection = () => {
   return (
     <section id="about" className="py-20 gradient-section">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6 sm:px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center">
             {/* Content */}
