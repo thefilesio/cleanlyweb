@@ -26,7 +26,7 @@ const ProcessSection = () => {
 
   return (
     <section className="py-20 gradient-section">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6 sm:px-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">
@@ -39,40 +39,40 @@ const ProcessSection = () => {
           </div>
 
           {/* Steps */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {steps.map((step, index) => {
-              const Icon = step.icon;
-              return (
-                <div 
-                  key={step.title}
-                  className="relative text-center animate-slide-up"
-                  style={{ animationDelay: `${index * 0.2}s` }}
-                >
-                  {/* Step number */}
-                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-clean-green text-white rounded-full flex items-center justify-center font-bold text-sm">
-                    {index + 1}
+          <div className="relative">
+            {/* Connector line for desktop */}
+            <div className="hidden lg:block absolute top-20 left-0 right-0 h-0.5 bg-clean-green opacity-30"></div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {steps.map((step, index) => {
+                const Icon = step.icon;
+                return (
+                  <div 
+                    key={step.title}
+                    className="relative text-center animate-slide-up"
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                  >
+                    {/* Step number - centered above icon (hidden on mobile) */}
+                    <div className="hidden sm:block w-8 h-8 bg-clean-green text-white rounded-full flex items-center justify-center font-bold text-sm mx-auto mb-4">
+                      {index + 1}
+                    </div>
+
+                    {/* Icon */}
+                    <div className="w-20 h-20 bg-clean-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-card">
+                      <Icon className="h-10 w-10 text-clean-green" />
+                    </div>
+
+                    {/* Content */}
+                    <h3 className="text-xl font-semibold text-clean-text mb-3">
+                      {step.title}
+                    </h3>
+                    <p className="text-clean-text-muted leading-relaxed">
+                      {step.description}
+                    </p>
                   </div>
-
-                  {/* Icon */}
-                  <div className="w-20 h-20 bg-clean-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-card">
-                    <Icon className="h-10 w-10 text-clean-green" />
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="text-xl font-semibold text-clean-text mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-clean-text-muted leading-relaxed">
-                    {step.description}
-                  </p>
-
-                  {/* Connector line (hidden on last item) */}
-                  {index < steps.length - 1 && (
-                    <div className="hidden lg:block absolute top-10 right-0 w-full h-0.5 bg-clean-green opacity-30 transform translate-x-1/2"></div>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
