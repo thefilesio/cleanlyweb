@@ -80,7 +80,7 @@ const ContactSection = () => {
 
   return (
     <section id="contact" className="py-20 bg-clean-white">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6 sm:px-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">
