@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 
 const ContactSection = () => {
   const { toast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [status, setStatus] = useState("idle");
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,34 +25,50 @@ const ContactSection = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Create email content
-    const emailContent = `
-Neue Anfrage von ${formData.name}
+    const form = formRef.current;
+    if (!form || !form.reportValidity()) return;
 
-Kontaktdaten:
-- Name: ${formData.name}
-- E-Mail: ${formData.email}
-- Telefon: ${formData.phone}
-- Standort: ${formData.location}
+    const data = new FormData(form);
+    data.append("_subject", "Neue Reinigungsanfrage über die Website");
+    data.append("_captcha", "false");
+    data.append("_honey", "");
 
-Projektdetails:
-- Kundentyp: ${formData.clientType}
-- Objektart: ${formData.objectType}
-- Fläche: ${formData.area} m²
-- Reinigungsfrequenz: ${formData.frequency}
-- Besondere Wünsche: ${formData.specialRequests || 'Keine'}
-    `;
+    try {
+      setStatus("sending");
+      const res = await fetch("https://formsubmit.co/reinigung.cleanly@gmail.com", {
+        method: "POST",
+        body: data,
+      });
+      
+      if (!res.ok) throw new Error("Fehler beim Senden");
 
-    // Create mailto link
-    const mailtoLink = `mailto:reinigung.cleanly@gmail.com?subject=Neue Reinigungsanfrage von ${formData.name}&body=${encodeURIComponent(emailContent)}`;
-    
-    // Open email client
-    window.location.href = mailtoLink;
-    
-    toast({
-      title: "Anfrage wird gesendet",
-      description: "Ihr E-Mail-Programm wird geöffnet. Wir melden uns innerhalb von 24 Stunden bei Ihnen.",
-    });
+      form.reset();
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        clientType: '',
+        objectType: '',
+        area: '',
+        frequency: '',
+        specialRequests: '',
+        location: ''
+      });
+      setStatus("success");
+      
+      toast({
+        title: "Anfrage erfolgreich gesendet",
+        description: "Vielen Dank! Wir melden uns innerhalb von 24 Stunden bei Ihnen.",
+      });
+    } catch (e) {
+      console.error(e);
+      setStatus("error");
+      toast({
+        title: "Fehler beim Senden",
+        description: "Leider ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie uns direkt.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleInputChange = (name: string, value: string) => {
@@ -78,13 +96,14 @@ Projektdetails:
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div className="bg-clean-white rounded-2xl p-8 shadow-card">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-clean-text mb-2">
                       Name *
                     </label>
                     <Input
+                      name="name"
                       required
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
@@ -96,6 +115,7 @@ Projektdetails:
                       E-Mail *
                     </label>
                     <Input
+                      name="email"
                       type="email"
                       required
                       value={formData.email}
@@ -111,6 +131,7 @@ Projektdetails:
                       Telefonnummer
                     </label>
                     <Input
+                      name="phone"
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
@@ -130,6 +151,7 @@ Projektdetails:
                         <SelectItem value="gewerbe">Gewerbe</SelectItem>
                       </SelectContent>
                     </Select>
+                    <input type="hidden" name="clientType" value={formData.clientType} />
                   </div>
                 </div>
 
@@ -151,12 +173,14 @@ Projektdetails:
                         <SelectItem value="sonstiges">Sonstiges</SelectItem>
                       </SelectContent>
                     </Select>
+                    <input type="hidden" name="objectType" value={formData.objectType} />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-clean-text mb-2">
                       Fläche (m²) *
                     </label>
                     <Input
+                      name="area"
                       type="number"
                       required
                       value={formData.area}
@@ -183,12 +207,14 @@ Projektdetails:
                         <SelectItem value="nach Vereinbarung">Nach Vereinbarung</SelectItem>
                       </SelectContent>
                     </Select>
+                    <input type="hidden" name="frequency" value={formData.frequency} />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-clean-text mb-2">
                       Standort (PLZ / Stadt) *
                     </label>
                     <Input
+                      name="location"
                       required
                       value={formData.location}
                       onChange={(e) => handleInputChange('location', e.target.value)}
@@ -202,6 +228,7 @@ Projektdetails:
                     Besondere Wünsche
                   </label>
                   <Textarea
+                    name="specialRequests"
                     value={formData.specialRequests}
                     onChange={(e) => handleInputChange('specialRequests', e.target.value)}
                     className="w-full"
@@ -215,8 +242,9 @@ Projektdetails:
                   variant="cleanly" 
                   size="lg" 
                   className="w-full"
+                  disabled={status === "sending"}
                 >
-                  Anfrage senden
+                  {status === "sending" ? "Senden..." : "Anfrage senden"}
                 </Button>
 
                 <p className="text-sm text-clean-text-muted text-center">
