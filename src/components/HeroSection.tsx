@@ -3,6 +3,7 @@ import { ArrowDown } from "lucide-react";
 import cleanlyLogo from "@/assets/cleanly-logo.png";
 import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useCookiebot } from "@/hooks/use-cookiebot";
 
 // Star SVG Component
 const StarIcon = ({ className }: { className?: string }) => (
@@ -33,6 +34,9 @@ const HeroSection = () => {
       return () => clearTimeout(timer);
     }
   }, [isMobile]);
+
+  // Load Cookiebot after animation completes
+  useCookiebot(showContent);
 
   const handleVideoEnd = () => {
     setVideoEnded(true);
