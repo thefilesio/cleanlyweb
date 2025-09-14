@@ -8,6 +8,17 @@ import {
 } from "lucide-react";
 
 const ServicesSection = () => {
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  };
+
   const services = [
     {
       icon: Building,
@@ -87,7 +98,10 @@ const ServicesSection = () => {
             <p className="text-lg text-clean-text-muted mb-6">
               Benötigen Sie eine andere Art der Reinigung?
             </p>
-            <button className="text-clean-green font-semibold hover:text-clean-green-hover transition-smooth">
+            <button 
+              onClick={scrollToContact}
+              className="text-clean-green font-semibold hover:text-clean-green-hover transition-smooth cursor-pointer"
+            >
               Lassen Sie uns darüber sprechen →
             </button>
           </div>
