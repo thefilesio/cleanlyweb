@@ -140,7 +140,7 @@ const HeroSection = () => {
         </div>
       )}
 
-      <div className={`container mx-auto px-4 text-center relative z-10 transition-all duration-1500 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      <div className={`container mx-auto px-6 sm:px-4 text-center relative z-10 transition-all duration-1500 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <div className="max-w-4xl mx-auto">
           {/* Logo */}
           <div className="mb-8">
@@ -153,8 +153,9 @@ const HeroSection = () => {
 
           {/* Main headline */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-clean-text mb-6 leading-tight">
-            Sauberkeit auf die{" "}
-            <span className="text-clean-green">professionelle</span> Art.
+            <span className="block sm:inline">Sauberkeit auf die</span>{" "}
+            <span className="text-clean-green inline">professionelle</span>{" "}
+            <span className="inline">Art.</span>
           </h1>
 
           {/* Subheadline */}
