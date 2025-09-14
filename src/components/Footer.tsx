@@ -15,7 +15,9 @@ const Footer = () => {
               </p>
               <div className="flex space-x-4">
                 <a 
-                  href="#" 
+                  href="https://www.instagram.com/cleanly_reinigung" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-clean-green rounded-full flex items-center justify-center hover:bg-clean-green-hover transition-smooth"
                 >
                   <Instagram className="h-5 w-5" />
@@ -29,9 +31,14 @@ const Footer = () => {
               <div className="space-y-3">
                 <div className="flex items-center">
                   <MapPin className="h-4 w-4 text-clean-green mr-3" />
-                  <span className="text-gray-300 text-sm">
+                  <a 
+                    href="https://www.google.com/maps/search/Schwarzenberger+Straße+131,+47226+Duisburg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-300 text-sm hover:text-clean-green transition-smooth"
+                  >
                     Schwarzenberger Straße 131, 47226 Duisburg
-                  </span>
+                  </a>
                 </div>
                 <div className="flex items-center">
                   <Mail className="h-4 w-4 text-clean-green mr-3" />
@@ -68,10 +75,26 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} Cleanly. Alle Rechte vorbehalten.
-            </p>
+          <div className="border-t border-gray-700 mt-8 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-gray-400 text-sm mb-4 md:mb-0">
+                © {new Date().getFullYear()} Cleanly. Alle Rechte vorbehalten.
+              </p>
+              <div className="flex space-x-6">
+                <a 
+                  href="/impressum" 
+                  className="text-gray-400 text-sm hover:text-clean-green transition-smooth"
+                >
+                  Impressum
+                </a>
+                <a 
+                  href="/datenschutz" 
+                  className="text-gray-400 text-sm hover:text-clean-green transition-smooth"
+                >
+                  Datenschutz
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
